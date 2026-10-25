@@ -30,9 +30,8 @@ One top-level directory per command, named after the command:
 
 ## Building a TUI
 
-- Ask which language/TUI library to use if the user hasn't said and there is
-  no existing TUI to follow. Once a few TUIs exist, match the most common
-  choice unless told otherwise.
+- Write every TUI in Go with Bubble Tea, Bubbles and Lip Gloss (see the
+  Rules in `README.md`). Each TUI directory is its own Go module.
 - Always show the full command line being built, so the user learns the real
   syntax, not just the UI.
 - Get option lists and descriptions from the tool's own `--help` / man page
