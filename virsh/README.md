@@ -28,6 +28,16 @@ machine, so it matches whatever version you have installed.
   command line shown is exactly what runs (no shell in between).
   Commands that take over the terminal (`console`, `edit`, `*-edit`,
   `*event`) run in the full terminal; `t` does that for any command.
+- **Shell**: `:` opens a prompt where you type virsh commands yourself
+  (`virsh ` is already there) and keep a scrollback of everything run, each
+  with its exit code and time. Output is highlighted to make it easier to
+  read: table headers, `Key:` labels, states (`running` green, `shut off`
+  yellow) and errors (red, stderr kept separate). As you type, a hint line
+  shows matching commands, then the command's usage and its ★ typical
+  example; `tab` completes command names, `--flags`, and values such as
+  domain, network and pool names. `↑↓` walks history. Opened from an options
+  form, the prompt starts with the command line you built, so you can tweak
+  it by hand.
 - **Learn more**: `?` shows the full `virsh help` text, `m` opens
   `man virsh` at that command's section.
 
@@ -43,9 +53,12 @@ libvirt's built-in fake hypervisor, a safe place to try destructive commands.
 
 | Screen  | Keys |
 |---------|------|
-| browse  | `↑↓` move, `/` filter, `p` popular only, `enter` open, `m` man, `u` URI, `R` read-only, `q` quit |
-| options | `enter`/`space` set or toggle, `tab` suggestions, `x` clear, `c` clear all, `r` run, `t` run in terminal, `?` help, `m` man, `esc` back |
+| browse  | `↑↓` move, `/` filter, `p` popular only, `enter` open, `:` shell, `m` man, `u` URI, `R` read-only, `q` quit |
+| options | `enter`/`space` set or toggle, `tab` suggestions, `x` clear, `c` clear all, `r` run, `t` run in terminal, `:` shell, `?` help, `m` man, `esc` back |
 | output  | `↑↓`/`pgup`/`pgdn` scroll, `r` re-run, `q` back |
+| shell   | `enter` run, `tab` complete, `↑↓` history, `pgup`/`pgdn` scroll, `ctrl+r` read-only, `ctrl+l` (or `clear`) clear, `esc` back |
+
+`:` opens the shell from the browse and options screens.
 
 `ctrl+c` quits, or kills a running command.
 

@@ -21,6 +21,7 @@ const (
 	browseScreen screen = iota
 	formScreen
 	outputScreen
+	shellScreen
 )
 
 var (
@@ -58,22 +59,26 @@ type model struct {
 	readonly   bool
 	uriEditing bool
 
-	screen screen
-	msg    string
+	screen     screen
+	prevScreen screen // where esc returns to from the shell
+	sh         shellState
+	msg        string
 
 	// form screen
-	cur        *Command
-	help       *Help
-	vals       map[string]string
-	fcursor    int
-	foffset    int
-	editing    bool
-	input      textinput.Model
-	picking    bool
-	picks      []string
-	pcursor    int
-	confirming bool
-	confirmFn  func(model) (tea.Model, tea.Cmd)
+	cur         *Command
+	help        *Help
+	vals        map[string]string
+	fcursor     int
+	foffset     int
+	editing     bool
+	input       textinput.Model
+	picking     bool
+	picks       []string
+	pcursor     int
+	confirming  bool
+	confirmFn   func(model) (tea.Model, tea.Cmd)
+	confirmName string
+	confirmLine string
 
 	// output screen
 	vp      viewport.Model
@@ -88,7 +93,7 @@ func newModel(cmds []Command) model {
 	f.Placeholder = "filter by name or description"
 	in := textinput.New()
 	in.Prompt = ""
-	m := model{cmds: cmds, filter: f, input: in, helps: map[string]*Help{}, vp: viewport.New(80, 20)}
+	m := model{cmds: cmds, filter: f, input: in, helps: map[string]*Help{}, vp: viewport.New(80, 20), sh: newShell()}
 	m.applyFilter()
 	return m
 }
@@ -150,6 +155,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		m.w, m.h = msg.Width, msg.Height
 		m.vp.Width, m.vp.Height = msg.Width, max(1, msg.Height-4)
+		m.refreshShell()
+		return m, nil
+	case shellDoneMsg:
+		m.shellDone(msg)
 		return m, nil
 	case runDoneMsg:
 		m.running, m.cancel = false, nil
@@ -194,6 +203,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m.updateForm(msg)
 		case outputScreen:
 			return m.updateOutput(msg)
+		case shellScreen:
+			return m.updateShell(msg)
 		}
 	}
 	return m, nil
@@ -279,6 +290,8 @@ func (m model) updateBrowse(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		m.cursor = 0
 	case "end", "G":
 		m.cursor = max(0, len(m.visible)-1)
+	case ":":
+		return m.openShell("")
 	case "p":
 		m.popOnly = !m.popOnly
 		m.cursor = 0
@@ -378,6 +391,8 @@ func (m model) updateForm(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		}
 	case "c":
 		m.vals = map[string]string{}
+	case ":":
+		return m.openShell(ShellJoin(BuildArgs(nil, m.cur.Name, m.help, m.vals)) + " ")
 	case "?":
 		m.argv = nil
 		m.vp.SetContent(m.help.Raw)
@@ -412,6 +427,7 @@ func (m model) guard(run func(model) (tea.Model, tea.Cmd)) (tea.Model, tea.Cmd) 
 	}
 	m.confirming = true
 	m.confirmFn = run
+	m.confirmName, m.confirmLine = m.cur.Name, ShellJoin(m.argvNow())
 	return m, nil
 }
 
@@ -451,9 +467,13 @@ func (m model) runCaptured() (tea.Model, tea.Cmd) {
 func (m model) runInTerminal() (tea.Model, tea.Cmd) {
 	argv := m.argvNow()
 	m.msg = "ran in terminal: " + ShellJoin(argv)
+	return m, execInTerminal(argv)
+}
+
+func execInTerminal(argv []string) tea.Cmd {
 	script := `printf '$ %s\n' "$0"; shift; "$@"; s=$?; printf '\n[exit %s] press enter to return ' "$s"; read _`
 	c := exec.Command("sh", append([]string{"-c", script, ShellJoin(argv), "_"}, argv...)...)
-	return m, tea.ExecProcess(c, func(err error) tea.Msg { return termDoneMsg{err} })
+	return tea.ExecProcess(c, func(err error) tea.Msg { return termDoneMsg{err} })
 }
 
 // manPage opens `man virsh` at the command's own section.
@@ -496,6 +516,8 @@ func (m model) View() string {
 		body = m.viewForm()
 	case outputScreen:
 		body = m.viewOutput()
+	case shellScreen:
+		body = m.viewShell()
 	}
 	return m.viewTop() + "\n" + body + "\n" + m.viewBottom()
 }
@@ -521,14 +543,14 @@ func (m model) viewBottom() string {
 	case m.uriEditing:
 		return "connection URI (-c), empty for default: " + m.input.View()
 	case m.confirming:
-		return warnStyle.Render(m.cur.Name+" may change state. Run it? [y/N]") + " " + ShellJoin(m.argvNow())
+		return warnStyle.Render(m.confirmName+" may change state. Run it? [y/N]") + " " + m.confirmLine
 	case m.msg != "":
 		return valStyle.Render(m.msg)
 	}
 	var keys string
 	switch m.screen {
 	case browseScreen:
-		keys = "↑↓ move  / filter  p popular only  enter open  m man  u uri  R read-only  q quit"
+		keys = "↑↓ move  / filter  p popular  enter open  : shell  m man  u uri  R read-only  q quit"
 	case formScreen:
 		switch {
 		case m.picking:
@@ -536,10 +558,12 @@ func (m model) viewBottom() string {
 		case m.editing:
 			keys = "enter save  esc cancel  tab suggestions"
 		default:
-			keys = "enter set  tab suggest  x/c clear  r run  t term  ? help  m man  esc back"
+			keys = "enter set  tab suggest  x/c clear  r run  t term  : shell  ? help  m man  esc back"
 		}
 	case outputScreen:
 		keys = "↑↓/pgup/pgdn scroll  r re-run  q back"
+	case shellScreen:
+		keys = "enter run  tab complete  ↑↓ history  pgup/pgdn scroll  ctrl+r read-only  ctrl+l clear  esc back"
 	}
 	return dimStyle.Render(keys)
 }
