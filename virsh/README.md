@@ -12,6 +12,11 @@ machine, so it matches whatever version you have installed.
 - **Browse**: all commands, grouped as `virsh help` groups them (Domain
   Management, Networking, Storage Pool, ...), with the selected command's
   help alongside. `/` filters by name or description.
+- **Popular**: the commands and flags people use most are marked `★` in
+  orange, and each popular command shows a typical invocation. `p` shows
+  only the popular commands, a good place to start. The list is curated in
+  `popular.go` from virsh cheat sheets and guides; `go test` checks every
+  entry still exists in your virsh.
 - **Build**: open a command to get a form of its options. Required options
   are marked `*`; positional ones are shown as `[--domain]`. The exact command
   line is shown at the bottom as you go. Positional values are written bare
@@ -38,7 +43,7 @@ libvirt's built-in fake hypervisor, a safe place to try destructive commands.
 
 | Screen  | Keys |
 |---------|------|
-| browse  | `↑↓` move, `/` filter, `enter` open, `m` man, `u` URI, `R` read-only, `q` quit |
+| browse  | `↑↓` move, `/` filter, `p` popular only, `enter` open, `m` man, `u` URI, `R` read-only, `q` quit |
 | options | `enter`/`space` set or toggle, `tab` suggestions, `x` clear, `c` clear all, `r` run, `t` run in terminal, `?` help, `m` man, `esc` back |
 | output  | `↑↓`/`pgup`/`pgdn` scroll, `r` re-run, `q` back |
 

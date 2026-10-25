@@ -32,6 +32,9 @@ One top-level directory per command, named after the command:
 
 - Write every TUI in Go with Bubble Tea, Bubbles and Lip Gloss (see the
   Rules in `README.md`). Each TUI directory is its own Go module.
+- Research the tool's most commonly used subcommands and flags (cheat
+  sheets, official guides) and highlight them in the TUI, with a typical
+  example for each, so a newcomer knows where to start.
 - Always show the full command line being built, so the user learns the real
   syntax, not just the UI.
 - Get option lists and descriptions from the tool's own `--help` / man page

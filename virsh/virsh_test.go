@@ -33,6 +33,29 @@ func TestParseAllCommands(t *testing.T) {
 	}
 }
 
+// Every popular command and flag must exist in the installed virsh.
+func TestPopularExists(t *testing.T) {
+	if _, err := LoadCommands(); err != nil {
+		t.Skip("virsh not usable:", err)
+	}
+	for cmd, p := range popular {
+		h, err := LoadHelp(cmd)
+		if err != nil {
+			t.Errorf("popular command %s: %v", cmd, err)
+			continue
+		}
+		for _, f := range p.Flags {
+			found := false
+			for _, o := range h.Options {
+				found = found || o.Name == f
+			}
+			if !found {
+				t.Errorf("popular flag %s --%s not in virsh help", cmd, f)
+			}
+		}
+	}
+}
+
 func TestBuildArgs(t *testing.T) {
 	h := &Help{
 		Synopsis: "send-key <domain> [--codeset <string>] [--holdtime <number>] <keycode>...",

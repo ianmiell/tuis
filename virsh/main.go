@@ -26,6 +26,7 @@ const (
 var (
 	titleStyle  = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("12"))
 	groupStyle  = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("13"))
+	popStyle    = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("214"))
 	selStyle    = lipgloss.NewStyle().Reverse(true)
 	dimStyle    = lipgloss.NewStyle().Foreground(lipgloss.Color("8"))
 	cmdStyle    = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("10"))
@@ -50,6 +51,7 @@ type model struct {
 	cursor    int
 	filter    textinput.Model
 	filtering bool
+	popOnly   bool // show only popular commands
 	helps     map[string]*Help
 
 	uri        string
@@ -95,6 +97,9 @@ func (m *model) applyFilter() {
 	q := strings.ToLower(m.filter.Value())
 	m.visible = m.visible[:0]
 	for i, c := range m.cmds {
+		if m.popOnly && !IsPopular(c.Name) {
+			continue
+		}
 		if q == "" || strings.Contains(c.Name, q) || strings.Contains(strings.ToLower(c.Short), q) {
 			m.visible = append(m.visible, i)
 		}
@@ -274,6 +279,10 @@ func (m model) updateBrowse(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		m.cursor = 0
 	case "end", "G":
 		m.cursor = max(0, len(m.visible)-1)
+	case "p":
+		m.popOnly = !m.popOnly
+		m.cursor = 0
+		m.applyFilter()
 	case "/":
 		m.filtering = true
 		cmd := m.filter.Focus()
@@ -500,7 +509,11 @@ func (m model) viewTop() string {
 	if m.readonly {
 		ro = cmdStyle.Render("read-only: ON (-r)")
 	}
-	return titleStyle.Render("virsh explorer") + "  " + dimStyle.Render("uri: ") + uri + "  " + ro
+	pop := dimStyle.Render("★ = popular")
+	if m.popOnly {
+		pop = popStyle.Render("★ popular only")
+	}
+	return titleStyle.Render("virsh explorer") + "  " + dimStyle.Render("uri: ") + uri + "  " + ro + "  " + pop
 }
 
 func (m model) viewBottom() string {
@@ -515,7 +528,7 @@ func (m model) viewBottom() string {
 	var keys string
 	switch m.screen {
 	case browseScreen:
-		keys = "↑↓ move  / filter  enter open  m man page  u uri  R read-only  q quit"
+		keys = "↑↓ move  / filter  p popular only  enter open  m man  u uri  R read-only  q quit"
 	case formScreen:
 		switch {
 		case m.picking:
@@ -575,7 +588,11 @@ func (m model) viewBrowse() string {
 		if vi == m.cursor {
 			curRow = len(rows)
 		}
-		rows = append(rows, row{pad(" "+c.Name, 24) + " " + c.Short, vi})
+		star := "  "
+		if IsPopular(c.Name) {
+			star = "★ "
+		}
+		rows = append(rows, row{pad(star+c.Name, 25) + " " + c.Short, vi})
 	}
 	listH := height - 2
 	off := 0
@@ -588,6 +605,8 @@ func (m model) viewBrowse() string {
 		switch {
 		case r.idx == m.cursor && r.idx >= 0:
 			left = append(left, selStyle.Render(pad(r.text, inner)))
+		case r.idx >= 0 && IsPopular(m.cmds[m.visible[r.idx]].Name):
+			left = append(left, popStyle.Render(pad(r.text, inner)))
 		case r.idx >= 0:
 			left = append(left, pad(r.text, inner))
 		default:
@@ -650,6 +669,9 @@ func (m model) viewForm() string {
 		head = append(head, l)
 	}
 	head = append(head, dimStyle.Render(trunc("usage: "+m.help.Synopsis, w)))
+	if p, ok := popular[m.cur.Name]; ok {
+		head = append(head, popStyle.Render(trunc("★ typical: "+p.Example, w)))
+	}
 	b.WriteString(strings.Join(head, "\n") + "\n\n")
 
 	// The command line being built, wrapped so it is always fully visible.
@@ -705,10 +727,14 @@ func (m model) viewForm() string {
 			val = dimStyle.Render(pad("·", valW))
 		}
 		label := pad(optLabel(o), nameW)
-		desc := trunc(o.Desc, w-nameW-valW-7)
-		line := " " + mark + " " + label + " " + val + " " + dimStyle.Render(desc)
+		desc := trunc(o.Desc, w-nameW-valW-8)
+		star, labelStyle := " ", lipgloss.NewStyle()
+		if IsPopularFlag(m.cur.Name, o.Name) {
+			star, labelStyle = popStyle.Render("★"), popStyle
+		}
+		line := " " + mark + star + " " + labelStyle.Render(label) + " " + val + " " + dimStyle.Render(desc)
 		if i == m.fcursor {
-			line = selStyle.Render(">") + mark + " " + titleStyle.Render(label) + " " + val + " " + desc
+			line = selStyle.Render(">") + mark + star + " " + titleStyle.Render(label) + " " + val + " " + desc
 		}
 		b.WriteString(line + "\n")
 	}
