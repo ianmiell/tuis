@@ -44,6 +44,7 @@ type runDone struct {
 	out     string
 	exit    int
 	took    time.Duration
+	argv    []string // what was run, so re-run repeats exactly this
 	cmdline string
 	shell   bool // came from the shell screen
 }
@@ -118,12 +119,16 @@ func run(argv []string, inShell bool) tea.Cmd {
 				buf.WriteString(err.Error())
 			}
 		}
-		return runDone{out: buf.String(), exit: exit, took: time.Since(start), cmdline: Display(argv), shell: inShell}
+		return runDone{out: buf.String(), exit: exit, took: time.Since(start), argv: argv, cmdline: Display(argv), shell: inShell}
 	}
 }
 
 func (m *model) startForm() tea.Cmd {
-	argv := m.argv()
+	return m.startRun(m.argv())
+}
+
+// startRun runs argv at once if it is safe, otherwise asks for y first.
+func (m *model) startRun(argv []string) tea.Cmd {
 	if IsSafe(argv) {
 		return m.doRun(argv)
 	}
@@ -199,8 +204,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				}
 			case "r":
 				if m.scr == scOutput && !m.running {
-					c := m.doRun(m.argv())
-					return m, c
+					if len(m.last.argv) == 0 {
+						return m, nil
+					}
+					return m, m.startRun(m.last.argv)
 				}
 			default:
 				var c tea.Cmd
