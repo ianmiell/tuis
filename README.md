@@ -88,6 +88,18 @@ One directory per command:
   options, and run it.
 - [fzf](fzf/): browse fzf tasks (the fuzzy finder), build a command line from their
   options, and run it.
+- [xargs](xargs/): browse xargs tasks (building and running commands from a list of items), build a command line from their
+  options, and run it.
+- [awk](awk/): browse awk tasks (fields, patterns and one-line programs), build a command line from their
+  options, and run it.
+- [sed](sed/): browse sed tasks (substituting, deleting and printing lines), build a command line from their
+  options, and run it.
+- [pv](pv/): browse pv tasks (progress, rate and ETA of data), build a command line from their
+  options, and run it.
+- [strace](strace/): browse strace tasks (the system calls a program makes), build a command line from their
+  options, and run it.
+- [ltrace](ltrace/): browse ltrace tasks (the library calls a program makes), build a command line from their
+  options, and run it.
 
 ## Building
 
