@@ -25,6 +25,7 @@ One directory per command:
 
 ## TUIs
 
+- [master](master/): a menu of the other TUIs; pick one to run it.
 - [virsh](virsh/): browse every virsh command, build a command line from its
   options, and run it.
 - [gh](gh/): browse the GitHub CLI's commands, build a command line from
