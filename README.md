@@ -60,6 +60,34 @@ One directory per command:
   command line, and run it.
 - [ssh](ssh/): browse ssh tasks (login, tunnels, jump hosts, config), build a
   command line from their options, and run it.
+- [openssl](openssl/): browse openssl tasks (certificates, TLS servers, keys, hashes), build a command line from their
+  options, and run it.
+- [dig](dig/): browse dig tasks (DNS lookups), build a command line from their
+  options, and run it.
+- [nmap](nmap/): browse nmap tasks (host discovery and port scans), build a command line from their
+  options, and run it.
+- [nslookup](nslookup/): browse nslookup tasks (simple DNS lookups), build a command line from their
+  options, and run it.
+- [curl](curl/): browse curl tasks (HTTP requests and downloads), build a command line from their
+  options, and run it.
+- [wget](wget/): browse wget tasks (downloads and mirroring), build a command line from their
+  options, and run it.
+- [jq](jq/): browse jq tasks (JSON filtering), build a command line from their
+  options, and run it.
+- [nc](nc/): browse nc tasks (connections, port checks and listeners), build a command line from their
+  options, and run it.
+- [lsof](lsof/): browse lsof tasks (open files and who uses a port), build a command line from their
+  options, and run it.
+- [sudo](sudo/): browse sudo tasks (building and (after confirmation) running elevated commands), build a command line from their
+  options, and run it.
+- [tree](tree/): browse tree tasks (directory trees), build a command line from their
+  options, and run it.
+- [pstree](pstree/): browse pstree tasks (the process tree), build a command line from their
+  options, and run it.
+- [ripgrep](ripgrep/): browse ripgrep tasks (fast recursive search with `rg`), build a command line from their
+  options, and run it.
+- [fzf](fzf/): browse fzf tasks (the fuzzy finder), build a command line from their
+  options, and run it.
 
 ## Building
 
