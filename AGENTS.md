@@ -40,6 +40,12 @@ One top-level directory per command, named after the command:
 - Get option lists and descriptions from the tool's own `--help` / man page
   on this machine, and say in the README which version of the tool it was
   written against.
+- The tool on `PATH` may be a wrapper or a different implementation (e.g.
+  `grep` is a ugrep wrapper in the shell, Homebrew GNU tools can shadow BSD
+  ones). Check `which`/`--version`, read help from the real binary, and say in
+  the README which one you used.
+- Expand tabs in captured output before putting it in a Bubbles viewport;
+  it truncates by display width, so raw tabs make lines overflow.
 - Don't run anything destructive by default. If the wrapped command can
   delete, overwrite or change state, require an explicit confirm before
   running it, and prefer a dry-run flag where the tool has one.
