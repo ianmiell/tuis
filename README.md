@@ -29,3 +29,9 @@ One directory per command:
   options, and run it.
 - [gh](gh/): browse the GitHub CLI's commands, build a command line from
   their flags, and run it.
+
+## Building
+
+`make` builds every TUI (binary `<dir>/<dir>-tui`), `make test` runs all the
+tests, `make <dir>` / `make test-<dir>` do one TUI, `make clean` removes the
+binaries.
