@@ -53,6 +53,12 @@ There is no shared test suite. Before calling a TUI done:
 - Check that the command line it shows is exactly what it runs.
 - Check it exits cleanly and restores the terminal (including on Ctrl-C).
 
+Drive the TUI in a detached tmux session (`tmux new-session -d -x 120 -y 34`,
+then `send-keys` and `capture-pane -p`). Send keys one at a time with a short
+sleep between them: a burst of keys can be dropped. When a Bubbles
+`textinput` is focused from `Update`, return the `tea.Cmd` that `Focus()`
+gives back, or the input silently ignores keys.
+
 ## Git
 
 - Small commits, one TUI (or one change to a TUI) per commit.
