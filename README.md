@@ -100,6 +100,10 @@ One directory per command:
   options, and run it.
 - [ltrace](ltrace/): browse ltrace tasks (the library calls a program makes), build a command line from their
   options, and run it.
+- [systemctl](systemctl/): browse systemctl tasks (inspecting and controlling systemd services), build a command line from their
+  options, and run it.
+- [journalctl](journalctl/): browse journalctl tasks (reading the systemd journal), build a command line from their
+  options, and run it.
 
 ## Building
 
