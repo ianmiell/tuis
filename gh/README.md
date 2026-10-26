@@ -10,6 +10,10 @@ that `gh --help` lists (not the help topics).
 
 ## What it does
 
+Looks and behaves like the [virsh](../virsh/) TUI (see "Look and feel" in the
+top-level README): bordered browse list with a help preview pane, a form with
+the command line pinned at the bottom, and a coloured exit status.
+
 - **Browse**: top-level commands as `gh --help` groups them, then drill into
   subcommands (`gh pr` → `list`, `create`, ...).
 - **Popular**: commands marked `★` (orange) are the ones people use most, and

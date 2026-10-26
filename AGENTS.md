@@ -53,6 +53,9 @@ One top-level directory per command, named after the command:
   - Run without a shell in between, and keep the destructive-command confirm
     and any read-only mode that applies.
   - List its keys in the TUI's footer and in its `README.md`.
+- Follow the "Look and feel" section of `README.md`: same layout, palette,
+  style names and keys as virsh. When changing one TUI's look, keep the
+  others in line.
 - Get option lists and descriptions from the tool's own `--help` / man page
   on this machine, and say in the README which version of the tool it was
   written against.
