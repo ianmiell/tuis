@@ -58,6 +58,8 @@ One directory per command:
   their flags, and run it.
 - [launchctl](launchctl/): browse launchctl's subcommands (macOS), build a
   command line, and run it.
+- [ssh](ssh/): browse ssh tasks (login, tunnels, jump hosts, config), build a
+  command line from their options, and run it.
 
 ## Building
 
