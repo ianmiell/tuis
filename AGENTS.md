@@ -37,6 +37,22 @@ One top-level directory per command, named after the command:
   example for each, so a newcomer knows where to start.
 - Always show the full command line being built, so the user learns the real
   syntax, not just the UI.
+- Give every TUI an execution window like virsh's "shell" screen
+  (`virsh/shell.go`, `virsh/README.md`). Copy the idea, not the code (TUIs
+  share no code):
+  - `:` opens it from the browse and options screens; `esc` returns to the
+    screen you came from.
+  - It has a text input prefixed with the command name (e.g. `virsh `), so
+    the user types the arguments to run directly, with tab completion where
+    the tool can offer it.
+  - Opening it from the options screen prefills the input with the command
+    line built so far, so the user can edit it before running.
+  - Each run is appended to a scrollback in a viewport: the command line as
+    run, then stdout/stderr, exit code and duration. Arrow keys recall
+    history, `pgup`/`pgdn` scroll, `ctrl+l` (or `clear`) clears it.
+  - Run without a shell in between, and keep the destructive-command confirm
+    and any read-only mode that applies.
+  - List its keys in the TUI's footer and in its `README.md`.
 - Get option lists and descriptions from the tool's own `--help` / man page
   on this machine, and say in the README which version of the tool it was
   written against.
