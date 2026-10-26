@@ -78,8 +78,25 @@ There is no shared test suite. Before calling a TUI done:
 - Check that the command line it shows is exactly what it runs.
 - Check it exits cleanly and restores the terminal (including on Ctrl-C).
 
-Drive the TUI in a detached tmux session (`tmux new-session -d -x 120 -y 34`,
-then `send-keys` and `capture-pane -p`). Send keys one at a time with a short
+Drive the TUI in a detached tmux session on a private tmux server, never the
+user's own. Plain `tmux new-session` joins the user's default server, where it
+can resize their windows, fire their config and hooks, and be wiped out by
+(or wipe out) their sessions. Give every tmux call `-L tuitest -f /dev/null`
+(its own socket, no user config) and unset `TMUX`, then kill only that server
+when done:
+
+```
+env -u TMUX tmux -L tuitest -f /dev/null new-session -d -s t -x 120 -y 34 'go run .'
+env -u TMUX tmux -L tuitest send-keys -t t j
+env -u TMUX tmux -L tuitest capture-pane -p -t t
+env -u TMUX tmux -L tuitest kill-server
+```
+
+Write each call out in full rather than through a `$T`-style variable (zsh
+does not word-split it).
+
+Never run `tmux kill-server`, `kill-session` or `attach` without `-L tuitest`.
+Send keys one at a time with a short
 sleep between them: a burst of keys can be dropped. When a Bubbles
 `textinput` is focused from `Update`, return the `tea.Cmd` that `Focus()`
 gives back, or the input silently ignores keys.
