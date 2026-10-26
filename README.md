@@ -27,3 +27,5 @@ One directory per command:
 
 - [virsh](virsh/): browse every virsh command, build a command line from its
   options, and run it.
+- [gh](gh/): browse the GitHub CLI's commands, build a command line from
+  their flags, and run it.
