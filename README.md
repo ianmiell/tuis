@@ -5,7 +5,7 @@ Ad-hoc terminal UIs (TUIs) for learning the features of command-line tools.
 Each TUI wraps one command and lets you explore its options interactively:
 pick flags, see the command line it builds, run it and look at the output.
 
-![ssh](media/ssh.png)
+![ssh](media/tuis_demo.gif)
 
 ## Rules
 
