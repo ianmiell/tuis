@@ -113,10 +113,4 @@ commands/<command>/
 
 ## Building
 
-`make` builds every TUI (binary `commands/<dir>/<dir>-tui`, or
-`master/master-tui`), `make test` runs all the
-tests, `make <dir>` / `make test-<dir>` do one TUI, `make clean` removes the
-binaries. `make install` builds and copies every `<dir>-tui` binary into
-`~/bin` (`make install-<dir>` for one TUI, `make uninstall` to remove them);
-set `PREFIX` or `BINDIR` to install elsewhere, e.g.
-`make install PREFIX=/usr/local`.
+`make` builds every TUI (binary `commands/<dir>/<dir>-tui`, or `master/master-tui`), `make test` runs all the tests, `make <dir>` / `make test-<dir>` do one TUI, `make clean` removes the binaries. `make install` builds and copies every `<dir>-tui` binary into `~/bin` (`make install-<dir>` for one TUI, `make uninstall` to remove them); set `PREFIX` or `BINDIR` to install elsewhere, e.g.  `make install PREFIX=/usr/local`.
