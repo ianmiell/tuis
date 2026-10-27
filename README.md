@@ -16,7 +16,7 @@ pick flags, see the command line it builds, run it and look at the output.
 
 ## Look and feel
 
-Every TUI looks and behaves like [virsh](virsh/) (`virsh/main.go` is the
+Every TUI looks and behaves like [virsh](commands/virsh/) (`commands/virsh/main.go` is the
 reference; TUIs share no code, so copy the style names and colours). New TUIs
 must follow it, and existing ones are brought in line when touched.
 
@@ -42,74 +42,77 @@ must follow it, and existing ones are brought in line when touched.
 
 ## Layout
 
-One directory per command:
+One directory per command, under `commands/`:
 
 ```
-<command>/
+commands/<command>/
   README.md    what the TUI covers and how to run it
   go.mod       the TUI's own Go module
   *.go         the TUI itself
 ```
 
+[master](master/), the menu of the other TUIs, stays at the top level.
+
 ## TUIs
 
 - [master](master/): a menu of the other TUIs; pick one to run it.
-- [virsh](virsh/): browse every virsh command, build a command line from its
+- [virsh](commands/virsh/): browse every virsh command, build a command line from its
   options, and run it.
-- [gh](gh/): browse the GitHub CLI's commands, build a command line from
+- [gh](commands/gh/): browse the GitHub CLI's commands, build a command line from
   their flags, and run it.
-- [launchctl](launchctl/): browse launchctl's subcommands (macOS), build a
+- [launchctl](commands/launchctl/): browse launchctl's subcommands (macOS), build a
   command line, and run it.
-- [ssh](ssh/): browse ssh tasks (login, tunnels, jump hosts, config), build a
+- [ssh](commands/ssh/): browse ssh tasks (login, tunnels, jump hosts, config), build a
   command line from their options, and run it.
-- [openssl](openssl/): browse openssl tasks (certificates, TLS servers, keys, hashes), build a command line from their
+- [openssl](commands/openssl/): browse openssl tasks (certificates, TLS servers, keys, hashes), build a command line from their
   options, and run it.
-- [dig](dig/): browse dig tasks (DNS lookups), build a command line from their
+- [dig](commands/dig/): browse dig tasks (DNS lookups), build a command line from their
   options, and run it.
-- [nmap](nmap/): browse nmap tasks (host discovery and port scans), build a command line from their
+- [nmap](commands/nmap/): browse nmap tasks (host discovery and port scans), build a command line from their
   options, and run it.
-- [nslookup](nslookup/): browse nslookup tasks (simple DNS lookups), build a command line from their
+- [nslookup](commands/nslookup/): browse nslookup tasks (simple DNS lookups), build a command line from their
   options, and run it.
-- [curl](curl/): browse curl tasks (HTTP requests and downloads), build a command line from their
+- [curl](commands/curl/): browse curl tasks (HTTP requests and downloads), build a command line from their
   options, and run it.
-- [wget](wget/): browse wget tasks (downloads and mirroring), build a command line from their
+- [wget](commands/wget/): browse wget tasks (downloads and mirroring), build a command line from their
   options, and run it.
-- [jq](jq/): browse jq tasks (JSON filtering), build a command line from their
+- [jq](commands/jq/): browse jq tasks (JSON filtering), build a command line from their
   options, and run it.
-- [nc](nc/): browse nc tasks (connections, port checks and listeners), build a command line from their
+- [nc](commands/nc/): browse nc tasks (connections, port checks and listeners), build a command line from their
   options, and run it.
-- [lsof](lsof/): browse lsof tasks (open files and who uses a port), build a command line from their
+- [lsof](commands/lsof/): browse lsof tasks (open files and who uses a port), build a command line from their
   options, and run it.
-- [sudo](sudo/): browse sudo tasks (building and (after confirmation) running elevated commands), build a command line from their
+- [sudo](commands/sudo/): browse sudo tasks (building and (after confirmation) running elevated commands), build a command line from their
   options, and run it.
-- [tree](tree/): browse tree tasks (directory trees), build a command line from their
+- [tree](commands/tree/): browse tree tasks (directory trees), build a command line from their
   options, and run it.
-- [pstree](pstree/): browse pstree tasks (the process tree), build a command line from their
+- [pstree](commands/pstree/): browse pstree tasks (the process tree), build a command line from their
   options, and run it.
-- [ripgrep](ripgrep/): browse ripgrep tasks (fast recursive search with `rg`), build a command line from their
+- [ripgrep](commands/ripgrep/): browse ripgrep tasks (fast recursive search with `rg`), build a command line from their
   options, and run it.
-- [fzf](fzf/): browse fzf tasks (the fuzzy finder), build a command line from their
+- [fzf](commands/fzf/): browse fzf tasks (the fuzzy finder), build a command line from their
   options, and run it.
-- [xargs](xargs/): browse xargs tasks (building and running commands from a list of items), build a command line from their
+- [xargs](commands/xargs/): browse xargs tasks (building and running commands from a list of items), build a command line from their
   options, and run it.
-- [awk](awk/): browse awk tasks (fields, patterns and one-line programs), build a command line from their
+- [awk](commands/awk/): browse awk tasks (fields, patterns and one-line programs), build a command line from their
   options, and run it.
-- [sed](sed/): browse sed tasks (substituting, deleting and printing lines), build a command line from their
+- [sed](commands/sed/): browse sed tasks (substituting, deleting and printing lines), build a command line from their
   options, and run it.
-- [pv](pv/): browse pv tasks (progress, rate and ETA of data), build a command line from their
+- [pv](commands/pv/): browse pv tasks (progress, rate and ETA of data), build a command line from their
   options, and run it.
-- [strace](strace/): browse strace tasks (the system calls a program makes), build a command line from their
+- [strace](commands/strace/): browse strace tasks (the system calls a program makes), build a command line from their
   options, and run it.
-- [ltrace](ltrace/): browse ltrace tasks (the library calls a program makes), build a command line from their
+- [ltrace](commands/ltrace/): browse ltrace tasks (the library calls a program makes), build a command line from their
   options, and run it.
-- [systemctl](systemctl/): browse systemctl tasks (inspecting and controlling systemd services), build a command line from their
+- [systemctl](commands/systemctl/): browse systemctl tasks (inspecting and controlling systemd services), build a command line from their
   options, and run it.
-- [journalctl](journalctl/): browse journalctl tasks (reading the systemd journal), build a command line from their
+- [journalctl](commands/journalctl/): browse journalctl tasks (reading the systemd journal), build a command line from their
   options, and run it.
 
 ## Building
 
-`make` builds every TUI (binary `<dir>/<dir>-tui`), `make test` runs all the
+`make` builds every TUI (binary `commands/<dir>/<dir>-tui`, or
+`master/master-tui`), `make test` runs all the
 tests, `make <dir>` / `make test-<dir>` do one TUI, `make clean` removes the
 binaries. `make install` builds and copies every `<dir>-tui` binary into
 `~/bin` (`make install-<dir>` for one TUI, `make uninstall` to remove them);
