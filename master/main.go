@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"sort"
 	"strings"
 
@@ -20,10 +21,14 @@ type entry struct {
 }
 
 // findRoot returns the repo root: the directory holding the TUI directories.
-// It is the parent of master/ whether run from master/, the repo root, or via
-// the binary master/master-tui.
+// It is the parent of master/ whether run from master/, the repo root, via
+// the binary master/master-tui, or via an installed copy (e.g. ~/bin), which
+// finds master/ from the source path compiled into the binary.
 func findRoot() string {
 	var cands []string
+	if _, src, _, ok := runtime.Caller(0); ok {
+		cands = append(cands, filepath.Dir(filepath.Dir(src)))
+	}
 	if exe, err := os.Executable(); err == nil {
 		cands = append(cands, filepath.Dir(filepath.Dir(exe)))
 	}
@@ -151,6 +156,11 @@ func (m model) View() string {
 
 func main() {
 	root := findRoot()
+	// Work from master/ itself, wherever master-tui was started from.
+	if err := os.Chdir(filepath.Join(root, "master")); err != nil {
+		fmt.Fprintln(os.Stderr, "master: cannot find the tuis repo:", err)
+		os.Exit(1)
+	}
 	if _, err := tea.NewProgram(model{root: root, entries: discover(root)}).Run(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)

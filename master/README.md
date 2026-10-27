@@ -15,7 +15,9 @@ Run it (from the repo root):
 cd master && go run .
 ```
 
-Or `make master` and then `master/master-tui`.
+Or `make master` and then `master/master-tui`, or `make install-master` and
+run `master-tui` from anywhere: it changes to its own `master/` folder (found
+from the source path built into it) before running.
 
 Unlike the other TUIs, master depends on its sibling directories by design:
 it only launches them.
