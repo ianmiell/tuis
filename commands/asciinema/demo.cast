@@ -1,0 +1,6 @@
+{"version":3,"term":{"cols":60,"rows":12},"timestamp":1793110984,"idle_time_limit":1.0,"title":"asciinema TUI demo","env":{"SHELL":"/bin/zsh"}}
+[0.006, "o", "hello from asciinema\r\n"]
+[0.512, "o", "Applications  dev   Library  private  tmp    var\r\nbin\t      etc   nix      sbin     Users  Volumes\r\ncores\t      home  opt      System   usr\r\n"]
+[0.510, "o", "Darwin\r\n"]
+[0.000, "o", "bye\r\n"]
+[0.001, "x", "0"]

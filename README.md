@@ -108,6 +108,8 @@ commands/<command>/
   options, and run it.
 - [journalctl](commands/journalctl/): browse journalctl tasks (reading the systemd journal), build a command line from their
   options, and run it.
+- [asciinema](commands/asciinema/): browse asciinema tasks (recording, playing back and sharing terminal sessions), build a command line from their
+  options, and run it.
 
 ## Building
 
