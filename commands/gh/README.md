@@ -50,7 +50,7 @@ first. Output runs are non-interactive (`GH_PROMPT_DISABLED=1`).
 Go 1.26+ and gh on your `PATH` (most commands need `gh auth login` first).
 
 ```
-cd gh
+cd commands/gh
 go run .
 ```
 

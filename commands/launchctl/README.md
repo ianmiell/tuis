@@ -71,7 +71,7 @@ read-only or dry-run mode.
 Go 1.26+ and macOS (launchctl on your `PATH`).
 
 ```
-cd launchctl
+cd commands/launchctl
 go run .
 ```
 

@@ -39,7 +39,7 @@ Nothing needs the terminal.
 Go 1.26+ and `nmap` on your `PATH` (`NMAP=/path/to/nmap` uses another binary).
 
 ```
-cd nmap
+cd commands/nmap
 go run .
 ```
 

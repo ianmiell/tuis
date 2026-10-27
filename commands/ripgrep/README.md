@@ -39,7 +39,7 @@ Nothing needs the terminal.
 Go 1.26+ and `rg` on your `PATH` (`RG=/path/to/rg` uses another binary).
 
 ```
-cd ripgrep
+cd commands/ripgrep
 go run .
 ```
 

@@ -37,7 +37,7 @@ pv only reads, so most runs go straight away. `-o` (writes a file), `-d`, `-R`, 
 Go 1.26+ and `pv` on your `PATH` (not installed by default) (`PV=/path/to/pv` uses another binary).
 
 ```
-cd pv
+cd commands/pv
 go run .
 ```
 

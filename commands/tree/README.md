@@ -39,7 +39,7 @@ Nothing needs the terminal.
 Go 1.26+ and `tree` on your `PATH` (`TREE=/path/to/tree` uses another binary).
 
 ```
-cd tree
+cd commands/tree
 go run .
 ```
 

@@ -37,7 +37,7 @@ Read-only commands (`status`, `list-*`, `show`, `cat`, `is-*`, `get-default`, `s
 Go 1.26+ and `systemctl` on your `PATH` (Linux with systemd) (`SYSTEMCTL=/path/to/systemctl` uses another binary).
 
 ```
-cd systemctl
+cd commands/systemctl
 go run .
 ```
 

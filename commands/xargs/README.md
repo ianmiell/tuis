@@ -37,7 +37,7 @@ xargs runs whatever command it is given, so **every run asks for `y` first**, in
 Go 1.26+ and `xargs` (GNU findutils) on your `PATH` (`XARGS=/path/to/xargs` uses another binary).
 
 ```
-cd xargs
+cd commands/xargs
 go run .
 ```
 

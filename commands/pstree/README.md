@@ -39,7 +39,7 @@ Nothing needs the terminal. Colour (`-C age`) and highlighting only show when ou
 Go 1.26+ and `pstree` on your `PATH` (psmisc on Linux; `PSTREE=/path/to/pstree` uses another binary). The macOS pstree is a different program with other options.
 
 ```
-cd pstree
+cd commands/pstree
 go run .
 ```
 

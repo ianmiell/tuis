@@ -37,7 +37,7 @@ sed reads and prints, so most runs go straight away. `-i`/`--in-place`, `-f` and
 Go 1.26+ and `sed` (GNU) on your `PATH` (`SED=/path/to/sed` uses another binary).
 
 ```
-cd sed
+cd commands/sed
 go run .
 ```
 

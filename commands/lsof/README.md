@@ -39,7 +39,7 @@ Repeat mode (`-r`/`+r`) never ends, so it runs in the full terminal (`t`, or ent
 Go 1.26+ and `lsof` on your `PATH` (`LSOF=/path/to/lsof` uses another binary).
 
 ```
-cd lsof
+cd commands/lsof
 go run .
 ```
 

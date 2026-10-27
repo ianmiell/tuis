@@ -39,7 +39,7 @@ A command that may need your password runs in the full terminal (after you confi
 Go 1.26+ and `sudo` on your `PATH` (`SUDO=/path/to/sudo` uses another binary).
 
 ```
-cd sudo
+cd commands/sudo
 go run .
 ```
 

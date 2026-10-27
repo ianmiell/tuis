@@ -37,7 +37,7 @@ Reading the journal runs straight away. Commands that delete or change it (`--va
 Go 1.26+ and `journalctl` on your `PATH` (Linux with systemd) (`JOURNALCTL=/path/to/journalctl` uses another binary).
 
 ```
-cd journalctl
+cd commands/journalctl
 go run .
 ```
 

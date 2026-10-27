@@ -39,7 +39,7 @@ A fetch that only prints runs straight away. Anything that sends a body or non-G
 Go 1.26+ and `curl` on your `PATH` (`CURL=/path/to/curl` uses another binary).
 
 ```
-cd curl
+cd commands/curl
 go run .
 ```
 

@@ -39,7 +39,7 @@ Nothing needs the terminal.
 Go 1.26+ and `dig` on your `PATH` (from bind9-dnsutils or bind-utils; `DIG=/path/to/dig` uses another binary).
 
 ```
-cd dig
+cd commands/dig
 go run .
 ```
 

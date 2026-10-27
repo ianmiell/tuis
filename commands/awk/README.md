@@ -37,7 +37,7 @@ awk programs can run commands and write files. A program that uses `system`, `ge
 Go 1.26+ and `awk` (gawk) on your `PATH` (`AWK=/path/to/awk` uses another binary).
 
 ```
-cd awk
+cd commands/awk
 go run .
 ```
 

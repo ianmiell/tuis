@@ -39,7 +39,7 @@ A plain connect or a listener waits for you to type, so they run in the full ter
 Go 1.26+ and `nc` on your `PATH` (`NC=/path/to/nc` uses another binary).
 
 ```
-cd nc
+cd commands/nc
 go run .
 ```
 

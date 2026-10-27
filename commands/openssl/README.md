@@ -39,7 +39,7 @@ Reading and printing runs straight away. Anything that writes a file (`-out`, `-
 Go 1.26+ and `openssl` on your `PATH` (`OPENSSL=/path/to/openssl` uses another binary). Options differ between OpenSSL versions and LibreSSL.
 
 ```
-cd openssl
+cd commands/openssl
 go run .
 ```
 

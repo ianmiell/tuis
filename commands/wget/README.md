@@ -39,7 +39,7 @@ wget saves files into the directory the TUI was started in, so every download as
 Go 1.26+ and `wget` on your `PATH` (`WGET=/path/to/wget` uses another binary).
 
 ```
-cd wget
+cd commands/wget
 go run .
 ```
 

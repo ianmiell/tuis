@@ -67,7 +67,7 @@ libvirt's built-in fake hypervisor, a safe place to try destructive commands.
 Go 1.26+ and virsh on your `PATH`.
 
 ```
-cd virsh
+cd commands/virsh
 go run .
 ```
 

@@ -64,7 +64,7 @@ no dry-run mode; use `-G` to see what it would do. Nothing is run by default.
 Go 1.26+ and `ssh` on your `PATH` (`SSH=/path/to/ssh` uses another binary).
 
 ```
-cd ssh
+cd commands/ssh
 go run .
 ```
 

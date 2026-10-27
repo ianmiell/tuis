@@ -39,7 +39,7 @@ With no name (a bare `nslookup`, or only options) nslookup opens its own `>` pro
 Go 1.26+ and `nslookup` on your `PATH` (`NSLOOKUP=/path/to/nslookup` uses another binary). Options take their value attached: `-type=MX`.
 
 ```
-cd nslookup
+cd commands/nslookup
 go run .
 ```
 

@@ -39,7 +39,7 @@ Nothing needs the terminal.
 Go 1.26+ and `jq` on your `PATH` (`JQ=/path/to/jq` uses another binary).
 
 ```
-cd jq
+cd commands/jq
 go run .
 ```
 

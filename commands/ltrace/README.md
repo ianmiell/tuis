@@ -37,7 +37,7 @@ ltrace runs the traced program with your permissions, so **every run asks for `y
 Go 1.26+ and `ltrace` on your `PATH` (Linux only) (`LTRACE=/path/to/ltrace` uses another binary).
 
 ```
-cd ltrace
+cd commands/ltrace
 go run .
 ```
 

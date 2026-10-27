@@ -39,7 +39,7 @@ fzf draws an interactive screen, so it always runs in the full terminal (`t`, or
 Go 1.26+ and `fzf` on your `PATH` (`FZF=/path/to/fzf` uses another binary).
 
 ```
-cd fzf
+cd commands/fzf
 go run .
 ```
 
