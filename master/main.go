@@ -20,7 +20,7 @@ type entry struct {
 	desc string
 }
 
-// findRoot returns the repo root: the directory holding the TUI directories.
+// findRoot returns the repo root: the directory holding master/ and commands/.
 // It is the parent of master/ whether run from master/, the repo root, via
 // the binary master/master-tui, or via an installed copy (e.g. ~/bin), which
 // finds master/ from the source path compiled into the binary.
@@ -58,17 +58,13 @@ func description(dir string) string {
 	return ""
 }
 
-// discover lists every sibling directory with a go.mod, except master itself.
+// discover lists every directory under commands/ with a go.mod.
 func discover(root string) []entry {
-	mods, _ := filepath.Glob(filepath.Join(root, "*", "go.mod"))
+	mods, _ := filepath.Glob(filepath.Join(root, "commands", "*", "go.mod"))
 	var out []entry
 	for _, m := range mods {
 		d := filepath.Dir(m)
-		n := filepath.Base(d)
-		if n == "master" {
-			continue
-		}
-		out = append(out, entry{n, description(d)})
+		out = append(out, entry{filepath.Base(d), description(d)})
 	}
 	sort.Slice(out, func(i, j int) bool { return out[i].name < out[j].name })
 	return out
@@ -76,7 +72,7 @@ func discover(root string) []entry {
 
 // launchCmd builds the TUI if its binary is missing, then runs it.
 func launchCmd(root, name string) *exec.Cmd {
-	dir := filepath.Join(root, name)
+	dir := filepath.Join(root, "commands", name)
 	bin := "./" + name + "-tui"
 	c := exec.Command("sh", "-c",
 		`[ -x "$1" ] || go build -o "$1" . || exit 1; exec "$1"`, "sh", bin)

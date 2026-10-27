@@ -13,10 +13,11 @@ over something general or polished.
 
 ## Layout
 
-One top-level directory per command, named after the command:
+One directory per command under `commands/`, named after the command
+(`master/`, the menu of the other TUIs, stays at the top level):
 
 ```
-<command>/
+commands/<command>/
   README.md    what the TUI covers and how to run it
   ...          the TUI itself
 ```
@@ -38,7 +39,7 @@ One top-level directory per command, named after the command:
 - Always show the full command line being built, so the user learns the real
   syntax, not just the UI.
 - Give every TUI an execution window like virsh's "shell" screen
-  (`virsh/shell.go`, `virsh/README.md`). Copy the idea, not the code (TUIs
+  (`commands/virsh/shell.go`, `commands/virsh/README.md`). Copy the idea, not the code (TUIs
   share no code):
   - `:` opens it from the browse and options screens; `esc` returns to the
     screen you came from.
