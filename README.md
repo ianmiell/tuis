@@ -132,6 +132,8 @@ commands/<command>/
   options, and run it.
 - [asciinema](commands/asciinema/): browse asciinema tasks (recording, playing back and sharing terminal sessions), build a command line from their
   options, and run it.
+- [ghostty](commands/ghostty/): browse ghostty actions (fonts, themes, config and keybindings), build a command line from their
+  options, and run it.
 
 ## Building
 
