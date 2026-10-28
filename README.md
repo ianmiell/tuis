@@ -98,6 +98,28 @@ commands/<command>/
   options, and run it.
 - [sed](commands/sed/): browse sed tasks (substituting, deleting and printing lines), build a command line from their
   options, and run it.
+- [grep](commands/grep/): browse grep tasks (searching text for matching lines), build a command line from their
+  options, and run it.
+- [wc](commands/wc/): browse wc tasks (counting lines, words and bytes), build a command line from their
+  options, and run it.
+- [cut](commands/cut/): browse cut tasks (selecting fields and columns), build a command line from their
+  options, and run it.
+- [head](commands/head/): browse head tasks (the first lines of a file), build a command line from their
+  options, and run it.
+- [tail](commands/tail/): browse tail tasks (the last lines of a file, and following it), build a command line from their
+  options, and run it.
+- [cat](commands/cat/): browse cat tasks (showing and joining files), build a command line from their
+  options, and run it.
+- [sort](commands/sort/): browse sort tasks (sorting lines), build a command line from their
+  options, and run it.
+- [uniq](commands/uniq/): browse uniq tasks (filtering repeated lines), build a command line from their
+  options, and run it.
+- [tr](commands/tr/): browse tr tasks (translating and deleting characters), build a command line from their
+  options, and run it.
+- [timeout](commands/timeout/): browse timeout tasks (running a command with a time limit), build a command line from their
+  options, and run it.
+- [git](commands/git/): browse git commands (looking at, recording and sharing changes), build a command line from their
+  options, and run it.
 - [pv](commands/pv/): browse pv tasks (progress, rate and ETA of data), build a command line from their
   options, and run it.
 - [strace](commands/strace/): browse strace tasks (the system calls a program makes), build a command line from their
