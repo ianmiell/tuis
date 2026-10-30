@@ -35,8 +35,16 @@ func TestDescriptionDropsRedundantText(t *testing.T) {
 		"virsh":     "the libvirt command-line tool",
 	}
 	for name, d := range want {
-		if got := description("../commands/" + name); got != d {
+		if got, _ := description("../commands/" + name); got != d {
 			t.Errorf("%s: got %q, want %q", name, got, d)
+		}
+	}
+	if _, l := description("../commands/curl"); l != "https://curl.se/" {
+		t.Errorf("curl link: got %q", l)
+	}
+	for _, e := range discover("..") {
+		if !strings.HasPrefix(e.link, "http") {
+			t.Errorf("%s: no home page link, got %q", e.name, e.link)
 		}
 	}
 }

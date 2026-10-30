@@ -19,6 +19,7 @@ import (
 type entry struct {
 	name string
 	desc string
+	link string // the tool's home page, from its README
 }
 
 // findRoot returns the repo root: the directory holding master/ and commands/.
@@ -45,17 +46,18 @@ func findRoot() string {
 }
 
 var (
-	mdLink    = regexp.MustCompile(`\[([^]]*)\]\([^)]*\)`)
+	mdLink    = regexp.MustCompile(`\[([^]]*)\]\(([^)]*)\)`)
 	codeAlias = regexp.MustCompile(`\s*\(` + "`[^`]*`" + `\)`)
 )
 
 // description is what the TUI's README.md says the tool does, from the first
 // sentence of its first paragraph, without what the menu already shows: the
 // "A TUI for exploring <name>" lead-in and the stock ": pick a task, ..." tail.
-func description(dir string) string {
+// link is the first link in that paragraph: the tool's home page.
+func description(dir string) (desc, link string) {
 	b, err := os.ReadFile(filepath.Join(dir, "README.md"))
 	if err != nil {
-		return ""
+		return "", ""
 	}
 	var para []string
 	for _, l := range strings.Split(string(b), "\n") {
@@ -67,7 +69,11 @@ func description(dir string) string {
 			para = append(para, l)
 		}
 	}
-	d := mdLink.ReplaceAllString(strings.Join(para, " "), "$1")
+	p := strings.Join(para, " ")
+	if l := mdLink.FindStringSubmatch(p); l != nil {
+		link = l[2]
+	}
+	d := mdLink.ReplaceAllString(p, "$1")
 	if i := strings.Index(d, ". "); i >= 0 {
 		d = d[:i]
 	}
@@ -85,7 +91,7 @@ func description(dir string) string {
 	if strings.HasPrefix(d, "(") && strings.HasSuffix(d, ")") && strings.Count(d, "(") == 1 {
 		d = d[1 : len(d)-1]
 	}
-	return d
+	return d, link
 }
 
 // discover lists every directory under commands/ with a go.mod.
@@ -94,7 +100,8 @@ func discover(root string) []entry {
 	var out []entry
 	for _, m := range mods {
 		d := filepath.Dir(m)
-		out = append(out, entry{filepath.Base(d), description(d)})
+		desc, link := description(d)
+		out = append(out, entry{filepath.Base(d), desc, link})
 	}
 	sort.Slice(out, func(i, j int) bool { return out[i].name < out[j].name })
 	return out
@@ -116,6 +123,7 @@ type model struct {
 	root    string
 	entries []entry
 	cur     int
+	width   int
 	err     error
 }
 
@@ -125,6 +133,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case doneMsg:
 		m.err = msg.err
+	case tea.WindowSizeMsg:
+		m.width = msg.Width
 	case tea.KeyMsg:
 		m.err = nil
 		switch msg.String() {
@@ -154,6 +164,7 @@ var (
 	sel   = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("212"))
 	dim   = lipgloss.NewStyle().Foreground(lipgloss.Color("241"))
 	bad   = lipgloss.NewStyle().Foreground(lipgloss.Color("196"))
+	link  = lipgloss.NewStyle().Foreground(lipgloss.Color("39")).Underline(true)
 )
 
 func (m model) View() string {
@@ -162,26 +173,50 @@ func (m model) View() string {
 	if len(m.entries) == 0 {
 		b.WriteString("no TUIs found in " + m.root + "\n")
 	}
-	w := 0
+	// Columns: cursor, name, description, link. The description gets at most
+	// half of what is left after the name; the link gets the rest.
+	nameW, descW := 0, 0
 	for _, e := range m.entries {
-		w = max(w, len(e.name))
+		nameW = max(nameW, len(e.name))
+		descW = max(descW, len([]rune(e.desc)))
 	}
+	width := m.width
+	if width == 0 {
+		width = 120
+	}
+	rest := width - 2 - nameW - 1
+	descW = min(descW, max(20, rest/2))
+	linkW := max(10, rest-descW-2)
 	for i, e := range m.entries {
-		cursor, name := "  ", fmt.Sprintf("%-*s", w, e.name)
+		cursor, name := "  ", fmt.Sprintf("%-*s", nameW, e.name)
 		if i == m.cur {
 			cursor, name = "> ", sel.Render(name)
 		}
-		d := e.desc
-		if r := []rune(d); len(r) > 70 {
-			d = string(r[:69]) + "…"
-		}
-		b.WriteString(cursor + name + " " + dim.Render(d) + "\n")
+		d := fmt.Sprintf("%-*s", descW, trunc(e.desc, descW))
+		b.WriteString(cursor + name + " " + dim.Render(d) + "  " + hyperlink(e.link, trunc(e.link, linkW)) + "\n")
 	}
 	if m.err != nil {
 		b.WriteString("\n" + bad.Render("last run: "+m.err.Error()) + "\n")
 	}
 	b.WriteString("\n" + dim.Render("↑/↓ move • enter run • q quit") + "\n")
 	return b.String()
+}
+
+// trunc shortens s to n runes, ending in "…" if it was cut.
+func trunc(s string, n int) string {
+	if r := []rune(s); len(r) > n {
+		return string(r[:n-1]) + "…"
+	}
+	return s
+}
+
+// hyperlink makes text a clickable link to url (OSC 8) in terminals that
+// support it, so a link cut short to fit still opens in full.
+func hyperlink(url, text string) string {
+	if url == "" {
+		return ""
+	}
+	return "\x1b]8;;" + url + "\x1b\\" + link.Render(text) + "\x1b]8;;\x1b\\"
 }
 
 func main() {

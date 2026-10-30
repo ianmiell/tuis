@@ -4,7 +4,9 @@ A menu of the other TUIs in this repo. Pick one and it runs; quit it and you
 are back at the menu.
 
 - Lists every directory under `commands/` that has a `go.mod` (so new TUIs
-  appear automatically), with the first line of its README as a description.
+  appear automatically), with what the tool does and a link to its home page,
+  both from the first paragraph of its README. The link is clickable in
+  terminals that support OSC 8 hyperlinks, even when cut short to fit.
 - Runs `commands/<dir>/<dir>-tui`, building it first with `go build` if it is missing.
 - Needs: Go. It runs nothing else and changes no state.
 - Keys: `↑`/`↓` or `j`/`k` move, `enter` runs, `q`/`esc`/`ctrl+c` quits.
