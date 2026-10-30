@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 	"runtime"
 	"sort"
 	"strings"
@@ -43,19 +44,48 @@ func findRoot() string {
 	return "."
 }
 
-// description is the first prose line of the TUI's README.md, if any.
+var (
+	mdLink    = regexp.MustCompile(`\[([^]]*)\]\([^)]*\)`)
+	codeAlias = regexp.MustCompile(`\s*\(` + "`[^`]*`" + `\)`)
+)
+
+// description is what the TUI's README.md says the tool does, from the first
+// sentence of its first paragraph, without what the menu already shows: the
+// "A TUI for exploring <name>" lead-in and the stock ": pick a task, ..." tail.
 func description(dir string) string {
 	b, err := os.ReadFile(filepath.Join(dir, "README.md"))
 	if err != nil {
 		return ""
 	}
+	var para []string
 	for _, l := range strings.Split(string(b), "\n") {
 		l = strings.TrimSpace(l)
+		if l == "" && len(para) > 0 {
+			break
+		}
 		if l != "" && !strings.HasPrefix(l, "#") {
-			return l
+			para = append(para, l)
 		}
 	}
-	return ""
+	d := mdLink.ReplaceAllString(strings.Join(para, " "), "$1")
+	if i := strings.Index(d, ". "); i >= 0 {
+		d = d[:i]
+	}
+	if i := strings.Index(d, ": pick "); i >= 0 {
+		d = d[:i]
+	}
+	d = strings.TrimSuffix(d, ".")
+	d = strings.TrimPrefix(d, "A TUI for exploring ")
+	name := filepath.Base(dir)
+	if len(d) >= len(name) && strings.EqualFold(d[:len(name)], name) {
+		d = d[len(name):]
+	}
+	d = strings.TrimSpace(codeAlias.ReplaceAllString(d, ""))
+	d = strings.TrimSpace(strings.TrimPrefix(d, ","))
+	if strings.HasPrefix(d, "(") && strings.HasSuffix(d, ")") && strings.Count(d, "(") == 1 {
+		d = d[1 : len(d)-1]
+	}
+	return d
 }
 
 // discover lists every directory under commands/ with a go.mod.
@@ -132,8 +162,12 @@ func (m model) View() string {
 	if len(m.entries) == 0 {
 		b.WriteString("no TUIs found in " + m.root + "\n")
 	}
+	w := 0
+	for _, e := range m.entries {
+		w = max(w, len(e.name))
+	}
 	for i, e := range m.entries {
-		cursor, name := "  ", fmt.Sprintf("%-8s", e.name)
+		cursor, name := "  ", fmt.Sprintf("%-*s", w, e.name)
 		if i == m.cur {
 			cursor, name = "> ", sel.Render(name)
 		}
